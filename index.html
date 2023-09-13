@@ -1,30 +1,33 @@
 <!DOCTYPE html>
-
-<html>
-	<head>
-		<title>Code Quiz</title>
-		<meta charset="UTF-8">
-		<link rel="stylesheet" href="style.css">
-        <script src = "script.js"></script>
-	</head>
-	<body>
-		<div>
-			<div class="right">
-                <a onclick="scores()" href="#"><h4 >View score</h4></a>
-			</div>
-			<!-- countdown timer on the top right of nav bar-->
-			<div class="left">
-				<h4>Time: <span id="time">0</span></h4>
-			</div>
-		</div>
-		<!--main body of quiz-->
-		<div id="quiz">
-            <div id="maincontent">      
-                <h1>
-					Code quiz Master!  
-                </h1>
-                <button onclick="start()">Start!</button>
-            </div>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code Quiz</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a id="scoreLink" href="#">View Score</a></li>
+            </ul>
+        </nav>
+        <div class="timer">
+            <span id="time">0</span>
         </div>
-	</body>
+    </header>
+    <main>
+        <section id="quiz">
+            <article id="maincontent">
+                <h1>Code Quiz Master!</h1>
+                <button id="startButton">Start!</button>
+            </article>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2023 Your Quiz App</p>
+    </footer>
+</body>
 </html>

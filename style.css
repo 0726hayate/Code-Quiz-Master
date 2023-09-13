@@ -1,32 +1,50 @@
-.right {
-    position: absolute; 
-    bottom:3px; 
-    right:3px;
-}
-
-.left {
-    position: absolute; 
-    bottom:3px; 
-    left:3px;
-}
-
+/* Define a color scheme */
 body {
     font-family: 'Open Sans', sans-serif;
     font-size: 16px;
-    line-height: 1;
+    line-height: 1.6;
     text-align: center;
     margin: auto;
-    width: 50%;
-    border: none;
-    padding: 100px;
+    width: 80%; /* Adjust as needed */
+    padding: 40px;
+    background-color: #f4f4f4; /* Background color */
+    color: #333; /* Text color */
 }
 
+/* Button styling */
 button {
     border: none;
-    background-color: #ff00006b;
-    font-size: 20px;
-    margin: 30px;
-    display: list-item;    
+    background-color: #007bff; /* Blue button background color */
+    color: #fff; /* Text color on buttons */
+    font-size: 18px;
+    margin: 20px;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease; /* Smooth button hover effect */
+}
 
+button:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+}
+
+/* Container styling */
+#quiz {
+    background-color: #fff; /* White container background */
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2); /* Box shadow for container */
+}
+
+/* Top bar styling */
+.right, .left {
+    position: absolute;
+    bottom: 10px;
+    color: #333; /* Text color on top bar */
+}
+
+/* Score display styling */
+#scoreLink {
+    text-decoration: underline; /* Underline the score link */
+    color: #007bff; /* Link color */
 }
 

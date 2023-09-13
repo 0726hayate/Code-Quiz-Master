@@ -1,132 +1,164 @@
-var score = 0;
-var thequestion = -1;
-var time = 0;
-var timer;
+// Define an array to store scores and initials
+const highScores = [];
 
+document.addEventListener("DOMContentLoaded", function () {
+    const scoreLink = document.getElementById("scoreLink");
+    const startButton = document.getElementById("startButton");
+    const timeElement = document.getElementById("time");
+    const mainContent = document.getElementById("maincontent");
 
-var questions = [{
-    title: "What is HTML",
-    choices: ["1.Hypertext Markup Language", "2.Hyper text mark language", "3.hype total markup liver", "4.an abbreviation"],
-    answer: "1.Hypertext Markup Language"
-    },
-    {
-    title: "What is CSS",
-    choices: ["1.Cascading Style Sheets", "2.Stlying lanaguage", "3.used to style an html doc", "4.All of the above"],
-    answer: "4.All of the above"
-    },
-    {
-    title: "Which of the following functions define the background color of this webpage?",
-    choices: ["1.background-color: #ff00006b;", "2.background-color: white", "3.background-color: none", "4.None of the above."],
-    answer: "4.None of the above."
-    },
-    {
-    title: "A very useful tool for development and debugging for printing content to the debugger is:",
-    choices: ["1.console log", "2.css", "3.javascript", "4.VS code"],
-    answer: "1.console log"
-    }
+    let score = 0;
+    let currentQuestionIndex = -1;
+    let time = 0;
+    let timer;
 
-]
-
-function start() {
-
-    time = 75;
-    document.getElementById("time").innerHTML = time;
-
-    timer = setInterval(function() {
-        time--;
-        document.getElementById("time").innerHTML = time;
-        if (time <= 0) {
-            clearInterval(timer);
-            end(); 
+    const questions = [
+        {
+            title: "What is HTML?",
+            choices: ["1. Hypertext Markup Language", "2. Hyper text mark language", "3. Hype total markup liver", "4. An abbreviation"],
+            answer: "1. Hypertext Markup Language"
+        },
+        {
+            title: "What is CSS?",
+            choices: ["1. Cascading Style Sheets", "2. Styling language", "3. Used to style an HTML doc", "4. All of the above"],
+            answer: "4. All of the above"
+        },
+        {
+            title: "Which of the following functions defines the background color of this webpage?",
+            choices: ["1. background-color: #ff00006b;", "2. background-color: white", "3. background-color: none", "4. None of the above."],
+            answer: "4. None of the above."
+        },
+        {
+            title: "A very useful tool for development and debugging for printing content to the debugger is:",
+            choices: ["1. console log", "2. CSS", "3. JavaScript", "4. VS Code"],
+            answer: "1. console log"
         }
-    }, 1000);
+    ];
 
-    next();
-}
+    function start() {
+        time = 75;
+        timeElement.textContent = time;
 
-function end() {
-    clearInterval(timer);
+        timer = setInterval(function () {
+            time--;
+            timeElement.textContent = time;
+            if (time <= 0) {
+                clearInterval(timer);
+                end();
+            }
+        }, 1000);
 
-    var quizContent = `
-    <h1>Youv'e reached the end!</h1>
-    <h2` + score +  ` /100!</h2>
-    <input type="text" id="name" placeholder="First name"> 
-    <button onclick="save()">Save your Score!</button>`;
-
-    document.getElementById("maincontent").innerHTML = quizContent;
-}
-
-function save() {
-    localStorage.setItem("score", score);
-    localStorage.setItem("initials",  document.getElementById('name').value);
-    scores();
-}
-
-function scores() {
-    var quizContent = `
-    <h1>` + localStorage.getItem("initials") + `'s score is:</h1>
-    <h1>` + localStorage.getItem("score") + `</h1><br> 
-    
-    <button onclick="clearScore()">Clear score</button><button onclick="reset()">Again!</button>`;
-
-    document.getElementById("maincontent").innerHTML = quizContent;
-}
-
-function clearScore() {
-    localStorage.setItem("initials", "");
-    localStorage.setItem("score",  "");
-
-    reset();
-}
-
-function reset() {
-    clearInterval(timer);
-    score = 0;
-    thequestion = -1;
-    time = 0;
-    timer = null;
-
-    document.getElementById("time").innerHTML = time;
-
-    var quizContent = `
-    <h1>
-       Code Quiz Master!
-    </h1>
-    <button onclick="start()">Start!</button>`;
-
-    document.getElementById("maincontent").innerHTML = quizContent;
-}
-
-function incorrect() {
-    time -= 10; 
-    next();
-}
-
-function correct() {
-    score += 10;
-    next();
-}
-
-function next() {
-    thequestion++;
-
-    if (thequestion > questions.length - 1) {
-        end();
-        return;
+        next();
     }
 
-    var quizContent = "<h2>" + questions[thequestion].title + "</h2>"
+    function end() {
+        clearInterval(timer);
 
-    for (var buttonLoop = 0; buttonLoop < questions[thequestion].choices.length; buttonLoop++) {
-        var buttonCode = "<button onclick=\"[ANS]\">[CHOICE]</button>"; 
-        buttonCode = buttonCode.replace("[CHOICE]", questions[thequestion].choices[buttonLoop]);
-        if (questions[thequestion].choices[buttonLoop] == questions[thequestion].answer) {
-            buttonCode = buttonCode.replace("[ANS]", "correct()");
+        const quizContent = `
+            <h1>You've reached the end!</h1>
+            <h2>${score} / 100!</h2>
+            <input type="text" id="name" placeholder="First name">
+            <button onclick="save()">Save your Score!</button>`;
+
+        mainContent.innerHTML = quizContent;
+    }
+
+    function save() {
+        const initials = document.getElementById('name').value;
+        const playerScore = { initials, score };
+        
+        // Add the player's score to the array
+        highScores.push(playerScore);
+
+        // Sort the scores in descending order
+        highScores.sort((a, b) => b.score - a.score);
+
+        // Keep only the top 10 scores
+        highScores.splice(10);
+
+        // Store scores in local storage
+        localStorage.setItem("highScores", JSON.stringify(highScores));
+
+        scores();
+    }
+
+    function scores() {
+        const savedScores = JSON.parse(localStorage.getItem("highScores")) || [];
+        const initials = localStorage.getItem("initials");
+        const savedScore = localStorage.getItem("score");
+
+        let quizContent = "";
+
+        if (savedScores.length > 0) {
+            quizContent += "<h1>Top 10 Scores:</h1>";
+
+            for (let i = 0; i < savedScores.length; i++) {
+                quizContent += `<p>${savedScores[i].initials}: ${savedScores[i].score}</p>`;
+            }
         } else {
-            buttonCode = buttonCode.replace("[ANS]", "incorrect()");
+            quizContent += "<p>No scores saved yet.</p>";
         }
-        quizContent += buttonCode
+
+        quizContent += `
+            <h1>${initials}'s score is:</h1>
+            <h1>${savedScore}</h1><br>
+            <button onclick="clearScore()">Clear score</button><button onclick="reset()">Again!</button>`;
+
+        mainContent.innerHTML = quizContent;
     }
 
-document.getElementById("maincontent").innerHTML = quizContent;
-}
+    function clearScore() {
+        localStorage.setItem("initials", "");
+        localStorage.setItem("score", "");
+
+        reset();
+    }
+
+    function reset() {
+        clearInterval(timer);
+        score = 0;
+        currentQuestionIndex = -1;
+        time = 0;
+        timer = null;
+        timeElement.textContent = time;
+
+        const quizContent = `
+            <h1>Code Quiz Master!</h1>
+            <button onclick="start()">Start!</button>`;
+
+        mainContent.innerHTML = quizContent;
+    }
+
+    function incorrect() {
+        time -= 10;
+        next();
+    }
+
+    function correct() {
+        score += 10;
+        next();
+    }
+
+    function next() {
+        currentQuestionIndex++;
+
+        if (currentQuestionIndex > questions.length - 1) {
+            end();
+            return;
+        }
+
+        const question = questions[currentQuestionIndex];
+        let quizContent = `<h2>${question.title}</h2>`;
+
+        for (let i = 0; i < question.choices.length; i++) {
+            const choice = question.choices[i];
+            const isCorrect = choice === question.answer;
+            const onclick = isCorrect ? "correct()" : "incorrect()";
+            quizContent += `<button onclick="${onclick}">${choice}</button>`;
+        }
+
+        mainContent.innerHTML = quizContent;
+    }
+
+    
+});
